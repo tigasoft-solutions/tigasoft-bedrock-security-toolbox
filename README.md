@@ -32,9 +32,13 @@ This repo codifies that idea.
 ## What this toolbox does
 
 ✔ Detects **modified tracked files** using `git status --porcelain`
+
 ✔ Detects **newly created PHP files** (common malware behavior)
+
 ✔ Fails loudly via **Forge deploy** or **cron email alerts**
+
 ✔ Requires **no WordPress plugins**
+
 ✔ Requires **no agents, daemons, or SaaS**
 
 ---
@@ -42,8 +46,11 @@ This repo codifies that idea.
 ## What this toolbox does NOT do
 
 ✘ No malware signature scanning
+
 ✘ No automatic cleanup
+
 ✘ No brute-force protection
+
 ✘ No WAF replacement
 
 This is **detection, not magic**.
