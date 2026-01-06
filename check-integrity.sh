@@ -1,33 +1,31 @@
 #!/usr/bin/env bash
-set -euo pipefail
 
 APP_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$APP_DIR"
 
-# Get the status of the git repository, excluding changes related to the 'security' submodule.
-# We check for modified files and exclude submodule updates.
-CHANGES=$(git status --porcelain | grep -v '^ [ M] security')
+# Debugging output to confirm script execution
+echo "Running integrity checks!"
 
-# Also exclude changes related to submodule status
-SUBMODULE_CHANGES=$(git submodule status | grep -v '^+' | grep -v '^-')
+# Get the status of the git repository, excluding changes related to the 'security' submodule
+CHANGES=$(git status --porcelain | grep -v '^ [ M] security' | tr -d '\r')
+
+# Debugging: Print the result of git status
+echo "git status output (after filtering security):"
+echo "$CHANGES"
+
+# Check for submodule changes (specifically the 'security' submodule)
+SUBMODULE_STATUS=$(git submodule status security)
+
+# Debugging: Print the result of git submodule status
+echo "Submodule status:"
+echo "$SUBMODULE_STATUS"
 
 # Combine the changes (git status + submodule status) and check if there are any real changes
-if [[ -n "$CHANGES" || -n "$SUBMODULE_CHANGES" ]]; then
+if [[ -n "$CHANGES" || "$SUBMODULE_STATUS" =~ '^- ' ]]; then
   echo "🚨 SECURITY ALERT: Git integrity check failed"
-  echo
-  echo "Host: $(hostname)"
-  echo "Path: $APP_DIR"
-  echo "Time: $(date -u)"
-  echo
-  echo "Changed files:"
-  echo "$CHANGES"
-  echo
-  echo "Submodule changes:"
-  echo "$SUBMODULE_CHANGES"
-  echo
   exit 1
 fi
 
-# If no changes, exit with success
+# If no changes, print success message
 echo "No changes detected. Integrity check passed."
 exit 0
