@@ -105,6 +105,19 @@ git submodule update --remote --merge
 
 Commit and deploy after updating.
 
+## Normalize git repository
+
+For existing repositories, this can cause the script to detect cached storage folders.
+
+Run the git commands below to remove from cached data.
+
+```
+git rm -r --cached storage
+git add .gitignore
+git commit -m "Normalize storage for Forge shared symlink"
+git push
+```
+
 ## Usage with Laravel Forge
 
 ### 1. Forge Deploy Script
