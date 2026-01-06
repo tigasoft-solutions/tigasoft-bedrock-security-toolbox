@@ -89,28 +89,47 @@ security/
 
 ## Installation
 
-Copy the `security/` folder into your Bedrock project root:
+Add this as a submodule into your Bedrock project root:
 
 ```
-/home/forge/site/current/security
+git submodule add https://github.com/tigasoft-solutions/tigasoft-bedrock-security-toolbox security
 ```
 
-Make scripts executable:
+## Updating your submodule
 
-```bash
-chmod +x security/*.sh
+Run the command below locally on your project:
+
+```
+git submodule update --remote --merge
 ```
 
----
+Commit and deploy after updating.
 
 ## Usage with Laravel Forge
 
 ### 1. Forge Deploy Script
 
-Add this **as the last step** in your deploy script:
+Add this **as the last step** in your deploy script before ACTIVATE_RELEASE():
 
 ```bash
-./security/check-integrity.sh
+# Initialize and update the submodule to make sure the security folder is populated
+git submodule init
+git submodule update --recursive
+
+# Check if the security directory exists
+if [ ! -d "$FORGE_RELEASE_DIRECTORY/security" ]; then
+    echo "Security directory not found in release directory!"
+    exit 1
+fi
+
+# Ensure scripts are executable
+chmod +x security/*.sh
+
+# Run integrity check BEFORE activation
+./security/check-integrity.sh || exit 1
+
+# Activate only if checks pass
+$ACTIVATE_RELEASE()
 ```
 
 If modified files are detected:
