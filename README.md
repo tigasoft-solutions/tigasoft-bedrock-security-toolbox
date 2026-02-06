@@ -230,6 +230,16 @@ This toolbox works best when paired with:
 
 ---
 
+## PHP execution disabled in key directories, public and uploads
+
+```bash
+find . -type f -exec chmod 644 {} \;
+find . -type d -exec chmod 755 {} \;
+chmod -R 775 storage bootstrap/cache
+```
+
+---
+
 ## Why Bedrock
 
 Bedrock makes this approach practical because:
